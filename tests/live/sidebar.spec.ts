@@ -4,9 +4,22 @@ import { readFile } from 'node:fs/promises'
 const repositoryUrl = 'https://github.com/qixing-jk/GitHub-CodeWiki-Jumper'
 const userscriptPath = new URL('../../dist/github-codewiki-jumper.user.js', import.meta.url)
 
-for (const classes of [
-  'hide-sm hide-md',
-  'OverviewSidebar-module__HideWhenNarrow__dOqz1 border-0',
+for (const { classes, sidebarClass, sectionClass } of [
+  {
+    classes: 'hide-sm hide-md',
+    sidebarClass: 'CodeViewSidebar-module__borderGrid__Lpx5q',
+    sectionClass: 'SidebarSection-module__sidebarSection__e8jFN',
+  },
+  {
+    classes: 'OverviewSidebar-module__HideWhenNarrow__dOqz1 border-0',
+    sidebarClass: 'CodeViewSidebar-module__borderGrid__Lpx5q',
+    sectionClass: 'SidebarSection-module__sidebarSection__e8jFN',
+  },
+  {
+    classes: 'HideWhenNarrow__nfGOuR border-0',
+    sidebarClass: 'borderGrid__VCnF9i',
+    sectionClass: 'sidebarSection__oqw6Y8',
+  },
 ]) {
   for (const hasReportRow of [true, false]) {
     test(`injects into desktop About with ${classes}, report row: ${hasReportRow}`, async ({
@@ -18,15 +31,15 @@ for (const classes of [
         route.fulfill({
           contentType: 'text/html',
           body: `
-          <section id="mobile-about" class="SidebarSection-module__sidebarSection__e8jFN">
+          <section id="mobile-about" class="${sectionClass}">
             <h2>About</h2>
           </section>
-          <div class="CodeViewSidebar-module__borderGrid__Lpx5q">
-            <div id="desktop-about" class="SidebarSection-module__sidebarSection__e8jFN ${classes}">
+          <div class="${sidebarClass}">
+            <div id="desktop-about" class="${sectionClass} ${classes}">
               <h2>About</h2>
               ${hasReportRow ? '<div class="mt-2"><a href="/contact/report-content?report=repo">Report repository</a></div>' : ''}
             </div>
-            <div id="releases" class="SidebarSection-module__sidebarSection__e8jFN"><h2>Releases</h2></div>
+            <div id="releases" class="${sectionClass}"><h2>Releases</h2></div>
           </div>`,
         })
       )
